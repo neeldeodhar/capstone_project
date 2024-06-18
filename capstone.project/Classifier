@@ -1,0 +1,21 @@
+import pandas as pd
+from sklearn.neighbors import KNeighborsClassifier
+
+
+
+
+X = dataset.drop(['cut'], axis = 1).values
+y = dataset.drop['price'].values
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state= 42)
+def fit(X_train, y_train):
+    model.fit(X_train, y_train)
+def predict(X_test):
+    model.predict(X_test)
+def score(X_test, y_test):
+
+class Estimators()
+def __init__(self):
+   # id = Column(String)
+       # self.df = pd.DataFrame
+       self.df = df

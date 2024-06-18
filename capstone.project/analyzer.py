@@ -74,9 +74,9 @@ class DataManipulation():
         z_scores = (selected_features - mean) / std_dev
         self.df= data_dfdf
         return self.df
-    def sample(self , df:pd.DataFrame)-> pd.DataFrame:
+    def sample(self , df:pd.DataFrame , factor)-> pd.DataFrame:
         data_dfdf = self.df.copy()
-        df = df.sample(frac=0.5, replace= True, random_state=1)
+        df = df.sample(frac=factor, replace= True, random_state=1)
         self.df= data_dfdf
         return self.df
   
@@ -102,24 +102,36 @@ class visualization():
         sns.boxplot(data = selected_features)
         plt.show()
     def plot_histograms_numeric(self,column_names):
+        data_dfdf = self.df.copy()
+              
+        
         selected_features = self.df[column_names]
        # data = np.random.normal(170, 10, 250)
-
+        data_dfdf['carat'] = pd.cut(data_dfdf['carat'], bins= [50 ,100, 150, 200, 250], labels = ['low', 'medium','high','very high'])
+       # self.df= data_dfdf
+        #return self.df
         # Plot the histogram
+        data_dfdf['color'] = pd.cut(data_dfdf['color'], bins= [1 ,2, 3, 4, 5], labels = ['low', 'medium','high','very high'])
+        data_dfdf['clarity'] = pd.cut(data_dfdf['clarity'], bins= [1 ,2, 3, 4, 5], labels = ['low', 'medium','high','very high'])
+        data_dfdf['depth'] = pd.cut(data_dfdf['depth'], bins= [50 ,55, 60, 65, 70], labels = ['low', 'medium','high','very high'])
+        
+        
+        data_dfdf['table'] = pd.cut(data_dfdf['table'], bins= [50 ,55, 60, 65, 70], labels = ['low', 'medium','high','very high'])
+        labels = ['low', 'medium','high','very high']
         plt.hist(selected_features)
-        plt.xlabel([column_names])
-        plt.ylabel("values")
+        plt.xlabel([labels])
+        plt.ylabel("count")
         plt.title("Numeric Histogram")
         plt.show()
 
     def plot_histograms_categorical(self,column_names):
         selected_features = self.df[column_names]
-       # data = np.random.normal(170, 10, 250)
+       # data = np.random.normal(170, 10, 250)()
 
         # Plot the histogram
         plt.hist(selected_features)
-        plt.xlabel("categorical attributes")
-        plt.ylabel("values")
+        plt.xlabel([column_names])
+        plt.ylabel("count")
         plt.title("categorical Histogram")
         plt.show()
 
@@ -130,7 +142,7 @@ if __name__ =="__main__":
     original = DataManipulation(dfdf)
   
     dfdf = original.drop_column("Unnamed: 0")
-    dfdf = original.sample(dfdf)
+    dfdf = original.sample(dfdf, 0.5)
     dfdf = original.shuffle()
     dfdf = original.encode_features(['carat','color','clarity'])
     
@@ -146,8 +158,8 @@ if __name__ =="__main__":
   
     visual.plot_correlationMatrix(['carat','depth','table','price','x','y','z'])
     visual.plot_boxPlot(['carat','depth','table'])
-    visual.plot_histograms_numeric(['carat','color','clarity','depth','table'])
-    visual.plot_histograms_categorical(['Fair','Good','Ideal','Premium','Very Good'])
+    visual.plot_histograms_numeric(['carat'])
+    visual.plot_histograms_categorical(['cut'])
 
 
     
