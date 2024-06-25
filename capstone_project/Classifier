@@ -1,0 +1,98 @@
+import pandas as pd
+import numpy as np
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split 
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.preprocessing import StandardScaler
+from capstone_project import analyzer
+# analyzer.readfile
+
+class classifier: 
+    #def read_dataset(csv_file_path: str) -> pd.DataFrame:
+     #   dataset = pd.read_csv(filepath_or_buffer = csv_file_path)
+   # analyzer.readfile
+    #return dataset
+    def splitdataset(dataset):
+        scaler = StandardScaler()
+   # dataset = dataset.drop(columns='cut')
+        dummies = pd.get_dummies(dataset['cut'])
+        X = scaler.fit_transform(dummies.values[:, 3:5])
+        y = scaler.fit_transform(dummies.values[:, 2])
+    
+  
+    
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state= 42)
+        X_train = X_train.values.reshape(-1,28,28,1)
+        X_test = X_test.values.reshape(-1,28,28,1)
+        y_train = y_train.values.reshape(-1,1)
+        y_test = y_test.values.reshape(-1,1)
+        return X, y, X_train, X_test, y_train, y_test
+
+
+    def fit(X_train, y_train, model):
+        y_fit = model.fit(X_train, y_train)
+        return y_fit
+    def predict(X_train, model):
+    
+        y_pred = model.predict(X_train)
+        print(y_pred)
+        return y_pred
+    def score(y_test,y_pred):
+        print ("Accuracy:", accuracy_score(y_test, y_predt) * 100)
+
+#class Estimators(): 
+    def __init__(self, df:pd.DataFrame):
+   # id = Column(String)
+       # self.df = pd.DataFrame
+       self.df = df
+    def Logistic_regression(self):
+        pass
+class KNN(classifier):
+    def__init__(self, n_neighbors:int)
+        self.n_neighbors = n_neighbors
+    def KNN_classifier(X_train, X_test, y_train):
+            acc_score = []
+
+            for k in range (1,30):
+                 knn = KNeighborsClassifier(n_neighbors = k)                              
+                 knn.fit(X_train, y_train)
+           
+            acc_score.append(accuracy_score(y_test, y_test_pred))
+class DecisionTree(classifier):
+    def__init__(self, criterion:str, random_state:int, max_depth: int)
+        self.criterion = criterion
+        self.random_state = random_state
+        self.max_depth = max_depth
+    def Decision_Tree (X_train, X_test, y_train):
+        DCT = DecisionTreeClassifier (criterion = "gini", random_state = 100, max_depth= 3)
+        DCT.fit(X_train, y_train)
+        return DCT
+class RandomForest(classifier):
+    def Random_Forest (X_train, X_test, y_train):
+           
+        for k in range(1,20):
+            RFM = RandomForestClassifier(random_state = 0, criterion = "entropy" , n_estimators = k)
+            RFM.fit(X_train, y_train)
+          
+        return RFM
+        
+class SVC_classifier(classifier):        
+      
+    def SVC (X_train, X_test, y_train):
+        scoreSVC = []
+
+        svm = SVC(kernel = 'rbf', gamma = 'auto', C = 0.2, random_state = 0).fit(X_train, y_train)
+        y_pred = svm.predict(X_test)
+        return svm
+    
+
+
+if __name__ =="__main__":
+    
+   
+    absolute_path = "C:/Users/ideod/OneDrive/Documents/new folder zip data/diamonds.csv"
+    dfdf = read_dataset(csv_file_path=absolute_path)
+    X, Y, X_train, X_test, y_train, y_test = splitdataset (dfdf)
+    DCTscore = Decision_Tree (X_train, X_test, y_train)
+    
