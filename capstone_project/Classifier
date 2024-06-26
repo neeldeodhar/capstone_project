@@ -5,94 +5,95 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
 from capstone_project import analyzer
-# analyzer.readfile
-
-class classifier: 
-    #def read_dataset(csv_file_path: str) -> pd.DataFrame:
-     #   dataset = pd.read_csv(filepath_or_buffer = csv_file_path)
-   # analyzer.readfile
-    #return dataset
-    def splitdataset(dataset):
-        scaler = StandardScaler()
-   # dataset = dataset.drop(columns='cut')
-        dummies = pd.get_dummies(dataset['cut'])
-        X = scaler.fit_transform(dummies.values[:, 3:5])
-        y = scaler.fit_transform(dummies.values[:, 2])
-    
-  
-    
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state= 42)
-        X_train = X_train.values.reshape(-1,28,28,1)
-        X_test = X_test.values.reshape(-1,28,28,1)
-        y_train = y_train.values.reshape(-1,1)
-        y_test = y_test.values.reshape(-1,1)
-        return X, y, X_train, X_test, y_train, y_test
 
 
-    def fit(X_train, y_train, model):
-        y_fit = model.fit(X_train, y_train)
-        return y_fit
-    def predict(X_train, model):
-    
-        y_pred = model.predict(X_train)
-        print(y_pred)
-        return y_pred
-    def score(y_test,y_pred):
-        print ("Accuracy:", accuracy_score(y_test, y_predt) * 100)
+def score(y_true: np.ndarray, y_predicted: np.ndarray) -> float:
+    accuracy_score = accuracy_score(y_true, y_predicted)
+    return accuracy_score
 
-#class Estimators(): 
-    def __init__(self, df:pd.DataFrame):
-   # id = Column(String)
-       # self.df = pd.DataFrame
-       self.df = df
-    def Logistic_regression(self):
-        pass
-class KNN(classifier):
-    def__init__(self, n_neighbors:int)
-        self.n_neighbors = n_neighbors
-    def KNN_classifier(X_train, X_test, y_train):
-            acc_score = []
+def plot_confusion_matrix(self):
+        CM = confusion_matrix(self.y_test, self.y_pred)
+        sns.heatmap(cm, annot = True, cmpap = 'Blues')
+        return CM  
+class Classifier: 
+    def __init__(self, random_state: int, params: dict):
+        #self.X_test = X_test
+       # self.X_train = X_train
+        
+        #self.y_test = y_test
+       # self.y_train = y_train
+       # self.n_estimators = 10
+       # self.max_depth = 10
+       self.random_state = random_state
+       self.model = self.create_model()
+       self.params = params
+    def create_model():
+        return None
 
-            for k in range (1,30):
-                 knn = KNeighborsClassifier(n_neighbors = k)                              
-                 knn.fit(X_train, y_train)
-           
-            acc_score.append(accuracy_score(y_test, y_test_pred))
-class DecisionTree(classifier):
-    def__init__(self, criterion:str, random_state:int, max_depth: int)
+    def fit(self, x_train: np.ndarray, y_train: np.ndarray, params: dict):
+       # self.model = RandomForestClassifier(n_estimators= self.n_estimators, max_depth = self.max_depth, random_state = 42)
+        #self.model.fit(self.X_train, self.y_train)
+        self.model.fit(X_train, y_train, **params)
+    def predict(self, x: np.ndarray) -> np.ndarray:
+        predict_results = self.model.predict(x)
+        return predict_results
+    def split_data(self):
+        self.X_train = self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size = self.custom_param, random_state =42)
+    def score(self, x:np.ndarray, y_true: ndarray) ->float:
+        y_predicted = self.predict(x)
+        accuracy_score = accuracy_score(y_true, y_predicted)
+        return accuracy_score
+
+class LogisticRegression(Classifier):
+    def __init__(self, random_state: int, params: dict):
+        super().__init__(random_state = random_state, params = params)
+    def create_model(self)-> LogisticRegression:
+        model = LogisticRegression(**self.params)
+        return model
+
+class Random_Classifier(Classifier):
+    def __init__(self, n_estimators: int, criterion: str, max_depth: int):
+        super().__init__(n_estimators = n_estimators, criterion = criterion, max_depth = max_depth, params = params)
+       # self.test_size = test_size
+   # def split_data(self):
+      #  self.X_train = self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size = self.custom_param, random_state =42)
+    def createRC_model(self)-> Random_Classifier:
+        RC_model = Random_Classifier(**self.params)
+        return RC_model
+class DecisionTree(Classifier):
+    def __init__(self, criterion:str, random_state:int, max_depth: int):
+       # self.criterion = criterion
+        #self.random_state = random_state
+        #self.max_depth = max_depth
+        super().__init__(random_state = random_state, max_depth = max_depth, criterion = criterion, params = params)
+    def createDT_model(self)-> DecisionTreeClassifier:
+        DTC = DecisionTreeClassifier (**self.params)
+       # DCT.fit(X_train, y_train)
+        return DTC   
+class SVC_classifier(Classifier):        
+    def __init__(self, criterion:str, random_state:int, max_depth: int):
         self.criterion = criterion
         self.random_state = random_state
-        self.max_depth = max_depth
-    def Decision_Tree (X_train, X_test, y_train):
-        DCT = DecisionTreeClassifier (criterion = "gini", random_state = 100, max_depth= 3)
-        DCT.fit(X_train, y_train)
-        return DCT
-class RandomForest(classifier):
-    def Random_Forest (X_train, X_test, y_train):
-           
-        for k in range(1,20):
-            RFM = RandomForestClassifier(random_state = 0, criterion = "entropy" , n_estimators = k)
-            RFM.fit(X_train, y_train)
-          
-        return RFM
-        
-class SVC_classifier(classifier):        
-      
+        self.gamma = gamma
+        self.kernel = kernel 
     def SVC (X_train, X_test, y_train):
         scoreSVC = []
 
         svm = SVC(kernel = 'rbf', gamma = 'auto', C = 0.2, random_state = 0).fit(X_train, y_train)
         y_pred = svm.predict(X_test)
         return svm
-    
+
+
 
 
 if __name__ =="__main__":
-    
    
-    absolute_path = "C:/Users/ideod/OneDrive/Documents/new folder zip data/diamonds.csv"
-    dfdf = read_dataset(csv_file_path=absolute_path)
-    X, Y, X_train, X_test, y_train, y_test = splitdataset (dfdf)
-    DCTscore = Decision_Tree (X_train, X_test, y_train)
-    
+  #  RFM = Random_Classifier(0.2)
+   # RFM.split_data()
+    #RFM.fit(RFM.X_train, RFM.y_train)
+    params = {"criterion": "lbgs"}
+    logistic_regression = LogisticRegression (params = params)
