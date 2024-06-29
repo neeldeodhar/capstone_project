@@ -13,6 +13,7 @@ from sklearn.svm import SVC
 from capstone_project import analyzer
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OrdinalEncoder
+import matplotlib.pyplot as plt
 #from tensorflow.keras.models import Sequential 
 
 def main():
@@ -42,15 +43,51 @@ def main():
     score_dict ["Logistic Regression"] = LRC.score(X_test, Y_test)
     
     print(score_dict)
+ # def __init__(self, n_estimators: int, criterion: str, max_depth: int):
+ #   RandClass = MyRandom_Classifier(params={}, n_estimators= None, criterion ='gini', max_depth= None, random_state = None)
+ #   RandClass.fit(X_train, Y_train , None)
+ #   score_RC ["Random Classifier"] = RandClass.score(X_test, Y_test)
+    
+  #  print(score_RC)
+    score_DTC = {}
+   # DTC = MyDecisionTree(random_state= 0, params={})
+    DTC = MyDecisionTree(random_state= 0, criterion= 'gini', max_depth = None, params = {})
+    DTC.fit(X_train, Y_train , None)
+    score_DTC["Decision Tree"] = DTC.score(X_test, Y_test)
+    
+    print(score_DTC)
 
+    score_SVC = {}
+   # DTC = MyDecisionTree(random_state= 0, params={})
+    SV = MySVC_classifier(kernel = None, gamma = None, random_state= 0, max_depth = None, params = {})
+    SV.fit(X_train, Y_train , None)
+    score_SVC["SVC"] = SV.score(X_test, Y_test)
+    
+    print(score_SVC)
+   # 
+    score_RF = {}
+   # DTC = MyDecisionTree(random_state= 0, params={})
+    RF = MyRandom_Classifier(random_state= None, n_estimators= None, criterion = None, max_depth = None, params = {})
+    RF.fit(X_train, Y_train , None)
+    score_RF["Random Forest "] = RF.score(X_test, Y_test)
+    
+    print(score_RF)
+    Plot_confusion_matrix(dfdf)
 def score(y_true: np.ndarray, y_predicted: np.ndarray) -> float:
     score = accuracy_score(y_true, y_predicted)
     return score
 
-def plot_confusion_matrix(self):
-        CM = confusion_matrix(self.y_test, self.y_pred)
-        sns.heatmap(cm, annot = True, cmpap = 'Blues')
-        return CM  
+class Plot_confusion_matrix():
+    def __init__(self, df:pd.DataFrame):
+        self.df = df
+    
+    def plot_correlationMatrix(self, column_names):
+        selected_features = self.df[column_names]
+       
+        plt.figure(figsize =(7,7))
+        sns.heatmap(selected_features.corr(), annot = True)
+       
+        plt.show()
 class Classifier: 
     def __init__(self, random_state: int, params: dict):
         #self.X_test = X_test
@@ -80,6 +117,9 @@ class Classifier:
         score = accuracy_score(y_true, y_predicted)
         return score
 
+              
+       
+    
 class MyLogisticRegression(Classifier):
     def __init__(self, random_state: int, params: dict):
         super().__init__(random_state = random_state, params = params)
@@ -87,37 +127,43 @@ class MyLogisticRegression(Classifier):
         model = LogisticRegression()
         return model
 
-class Random_Classifier(Classifier):
-    def __init__(self, n_estimators: int, criterion: str, max_depth: int):
-        super().__init__(n_estimators = n_estimators, criterion = criterion, max_depth = max_depth, params = params)
+class MyRandom_Classifier(Classifier):
+    def __init__(self, n_estimators: int, random_state: int,criterion: str, max_depth: int, params: dict):
+        #super().__init__(n_estimators = n_estimators, criterion = criterion, max_depth = max_depth, params = params)
+        super().__init__(random_state= random_state , params = params)
        # self.test_size = test_size
+        self.criterion = criterion
+        self.n_estimators = n_estimators
+        self.max_depth = max_depth
+        self.random_state = random_state
    # def split_data(self):
       #  self.X_train = self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size = self.custom_param, random_state =42)
     def create_model(self)-> RandomForestClassifier:
-        RC_model = RandomForestClassifier()
-        return RC_model
-class DecisionTree(Classifier):
-    def __init__(self, criterion:str, random_state:int, max_depth: int):
+        model = RandomForestClassifier()
+        return model
+class MyDecisionTree(Classifier):
+    def __init__(self, criterion:str, random_state:int, max_depth: int, params: dict):
        # self.criterion = criterion
         #self.random_state = random_state
         #self.max_depth = max_depth
-        super().__init__(random_state = random_state, max_depth = max_depth, criterion = criterion, params = params)
+      #  super().__init__(random_state = random_state, max_depth = max_depth, criterion = criterion, params = params)
+      #  super().__init__(random_state = random_state, params = params)
+       super().__init__(random_state = random_state, params = params)
     def create_model(self)-> DecisionTreeClassifier:
-        DTC = DecisionTreeClassifier (**self.params)
+        model = DecisionTreeClassifier()
        # DCT.fit(X_train, y_train)
-        return DTC   
-class SVC_classifier(Classifier):        
-    def __init__(self, kernel:str, gamma: str, random_state:int, max_depth: int):
-        self.criterion = criterion
-        self.random_state = random_state
+        return model   
+class MySVC_classifier(Classifier):        
+    def __init__(self, kernel:str, gamma: str, random_state:int, max_depth: int, params: dict):
+        #self.criterion = criterion
+        
         self.gamma = gamma
         self.kernel = kernel 
-    def SVC (self) -> SVC:
-        scoreSVC = []
-
-        svm = SVC(**self.params).fit(X_train, Y_train)
-        y_pred = svm.predict(X_test)
-        return svm
+        super().__init__(random_state = random_state, params = params)
+    def create_model(self)-> SVC:
+        model = SVC()
+       # DCT.fit(X_train, y_train)
+        return model
 
 #class ANN_classifier(Classifier):
    # def __init__(self, activation: str):
@@ -147,3 +193,6 @@ if __name__ =="__main__":
     #random_state = 4
     #logreg = LogisticRegression (params = params, random_state = random_state)
     #logreg.score
+   absolute_path = "C:/Users/ideod/OneDrive/Documents/new folder zip data/diamonds.csv"
+   dfdf = analyzer.read_dataset(csv_file_path=absolute_path)
+   Plot_confusion_matrix(dfdf)
