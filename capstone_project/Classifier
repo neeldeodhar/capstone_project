@@ -14,6 +14,7 @@ from capstone_project import analyzer
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OrdinalEncoder
 import matplotlib.pyplot as plt
+import seaborn as sns
 #from tensorflow.keras.models import Sequential 
 
 def main():
@@ -27,7 +28,7 @@ def main():
     encoder = LabelEncoder()
     Y = encoder.fit_transform(y)
     
-    score_dict = {}
+    
     scaler = StandardScaler()
     X = scaler.fit_transform(selected_features)
     X_train, X_test_val, Y_train, Y_test_val = train_test_split(X, Y, test_size=0.2, random_state=45)
@@ -37,7 +38,7 @@ def main():
     X_trainscale = scaler.fit_transform(X_train)
     X_testscale = scaler.transform(X_test)
     
-
+    score_dict = {}
     LRC = MyLogisticRegression(random_state= 0, params={})
     LRC.fit(X_train, Y_train , None)
     score_dict ["Logistic Regression"] = LRC.score(X_test, Y_test)
@@ -72,7 +73,35 @@ def main():
     score_RF["Random Forest "] = RF.score(X_test, Y_test)
     
     print(score_RF)
-    Plot_confusion_matrix(dfdf)
+
+    score_ANN = {}
+   # DTC = MyDecisionTree(random_state= 0, params={})
+    AN = MyANN_classifier(random_state= None, max_iter = None, hidden_layer_sizes = None, params = {})
+    AN.fit(X_train, Y_train , None)
+    score_ANN["ANN Classifier "] = AN.score(X_test, Y_test)
+    
+    print(score_ANN)
+def  pre_processing():
+    absolute_path = "C:/Users/ideod/OneDrive/Documents/new folder zip data/diamonds.csv"
+    dfdf = analyzer.read_dataset(csv_file_path=absolute_path)
+
+    data_manipulation = analyzer.DataManipulation(dfdf)
+    y = dfdf['cut']    
+    selected_features = dfdf[['carat', 'depth', 'table', 'price' ]]
+    
+    encoder = LabelEncoder()
+    Y = encoder.fit_transform(y)
+    
+    score_dict = {}
+    scaler = StandardScaler()
+    X = scaler.fit_transform(selected_features)
+    X_train, X_test_val, Y_train, Y_test_val = train_test_split(X, Y, test_size=0.2, random_state=45)
+    X_test, X_val, Y_test, Y_val = train_test_split(X_test_val, Y_test_val, test_size=0.5, random_state=45)
+  
+    
+    X_trainscale = scaler.fit_transform(X_train)
+    X_testscale = scaler.transform(X_test)
+
 def score(y_true: np.ndarray, y_predicted: np.ndarray) -> float:
     score = accuracy_score(y_true, y_predicted)
     return score
@@ -81,13 +110,14 @@ class Plot_confusion_matrix():
     def __init__(self, df:pd.DataFrame):
         self.df = df
     
-    def plot_correlationMatrix(self, column_names):
-        selected_features = self.df[column_names]
+    def plot_correlationMatrix(self, y_true, y_predicted):
+       # selected_features = self.df[column_names]
+        cmval = confusion_matrix(y_true, y_pred)
+        cmval_display = ConfusionMatrixDisplay(cmval).plot()
+       # plt.figure(figsize =(7,7))
+        #sns.heatmap(selected_features.corr(), annot = True)
        
-        plt.figure(figsize =(7,7))
-        sns.heatmap(selected_features.corr(), annot = True)
-       
-        plt.show()
+        #plt.show()
 class Classifier: 
     def __init__(self, random_state: int, params: dict):
         #self.X_test = X_test
@@ -165,7 +195,16 @@ class MySVC_classifier(Classifier):
        # DCT.fit(X_train, y_train)
         return model
 
-#class ANN_classifier(Classifier):
+class MyANN_classifier(Classifier):
+    def __init__(self, max_iter: int, random_state: int, hidden_layer_sizes: int, params:dict):
+        self.max_iter = max_iter
+        self.hidden_layer_sizes = hidden_layer_sizes
+        super().__init__(random_state = random_state, params = params)
+    def create_model(self)-> MLPClassifier:
+        model = MLPClassifier()
+        return model
+    
+    
    # def __init__(self, activation: str):
        # self.activation = activation
 
@@ -193,6 +232,8 @@ if __name__ =="__main__":
     #random_state = 4
     #logreg = LogisticRegression (params = params, random_state = random_state)
     #logreg.score
-   absolute_path = "C:/Users/ideod/OneDrive/Documents/new folder zip data/diamonds.csv"
-   dfdf = analyzer.read_dataset(csv_file_path=absolute_path)
-   Plot_confusion_matrix(dfdf)
+  # absolute_path = "C:/Users/ideod/OneDrive/Documents/new folder zip data/diamonds.csv"
+   #dfdf = analyzer.read_dataset(csv_file_path=absolute_path)
+ #  visual= Plot_confusion_matrix(dfdf)
+  # visual.plot_correlationMatrix(['carat', 'depth', 'table', 'price' ])
+ #  visual.plot_correlationMatrix(Classifier.predict())

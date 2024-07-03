@@ -1,0 +1,30 @@
+import pandas as pd
+
+import numpy as np
+
+import os
+
+import matplotlib.pyplot as plt
+
+import seaborn as sns
+
+import sys
+
+import scipy.cluster.hierarchy as sch
+
+from sklearn.preprocessing import OrdinalEncoder
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.cluster import KMeans
+from sklearn.cluster import AgglomerativeClustering
+
+def main():
+    
+
+class Clusterer():
+    def fit(self, X_train: np.ndarray, y_true_train: np.ndarray, params: dict):
+       # self.model = RandomForestClassifier(n_estimators= self.n_estimators, max_depth = self.max_depth, random_state = 42)
+        #self.model.fit(self.X_train, self.y_train)
+        self.model.fit(X_train, y_true_train)
+    def predict(self, X: np.ndarray) -> np.ndarray:
+        predict_results = self.model.predict(X)
+        return predict_results
