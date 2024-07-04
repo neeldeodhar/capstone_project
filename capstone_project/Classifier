@@ -15,13 +15,14 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OrdinalEncoder
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 #from tensorflow.keras.models import Sequential 
 
 def main():
     absolute_path = "C:/Users/ideod/OneDrive/Documents/new folder zip data/diamonds.csv"
     dfdf = analyzer.read_dataset(csv_file_path=absolute_path)
-
     data_manipulation = analyzer.DataManipulation(dfdf)
+
     y = dfdf['cut']    
     selected_features = dfdf[['carat', 'depth', 'table', 'price' ]]
     
@@ -44,6 +45,7 @@ def main():
     score_dict ["Logistic Regression"] = LRC.score(X_test, Y_test)
     
     print(score_dict)
+    
  # def __init__(self, n_estimators: int, criterion: str, max_depth: int):
  #   RandClass = MyRandom_Classifier(params={}, n_estimators= None, criterion ='gini', max_depth= None, random_state = None)
  #   RandClass.fit(X_train, Y_train , None)
@@ -65,7 +67,18 @@ def main():
     score_SVC["SVC"] = SV.score(X_test, Y_test)
     
     print(score_SVC)
-   # 
+  #  scoreSVC = svm.score(X_test,y_test)
+    Y_pred = SV.predict(X_test)
+    con = confusion_matrix(Y_test, Y_pred)
+    print ("confusion matrix:\n",con)
+  #  cmval = confusion_matrix(Y_val, Y_pred)
+    cmval_display = ConfusionMatrixDisplay(con).plot()
+   # ConfusionMatrixDisplay(con).plot()
+  #  plt.figure(figsize =(7,7))
+  #  sns.heatmap(Y_pred.corr(), annot = True)
+       
+    plt.show()
+
     score_RF = {}
    # DTC = MyDecisionTree(random_state= 0, params={})
     RF = MyRandom_Classifier(random_state= None, n_estimators= None, criterion = None, max_depth = None, params = {})
@@ -110,14 +123,15 @@ class Plot_confusion_matrix():
     def __init__(self, df:pd.DataFrame):
         self.df = df
     
-    def plot_correlationMatrix(self, y_true, y_predicted):
-       # selected_features = self.df[column_names]
-        cmval = confusion_matrix(y_true, y_pred)
-        cmval_display = ConfusionMatrixDisplay(cmval).plot()
-       # plt.figure(figsize =(7,7))
-        #sns.heatmap(selected_features.corr(), annot = True)
+    def plot_correlationMatrix(self, column_names):
+       selected_features = self.df[column_names]
+      #  selected_features = self.df(y_predicted)
+      #  cmval = confusion_matrix(y_true, y_pred)
+       # cmval_display = ConfusionMatrixDisplay(cmval).plot()
+       plt.figure(figsize =(7,7))
+       sns.heatmap(selected_features.corr(), annot = True)
        
-        #plt.show()
+       plt.show()
 class Classifier: 
     def __init__(self, random_state: int, params: dict):
         #self.X_test = X_test
@@ -223,6 +237,7 @@ class MyANN_classifier(Classifier):
 
 if __name__ =="__main__":
    main()
+   
   #  RFM = Random_Classifier(0.2)
    # RFM.split_data()
     #RFM.fit(RFM.X_train, RFM.y_train)
@@ -234,6 +249,12 @@ if __name__ =="__main__":
     #logreg.score
   # absolute_path = "C:/Users/ideod/OneDrive/Documents/new folder zip data/diamonds.csv"
    #dfdf = analyzer.read_dataset(csv_file_path=absolute_path)
- #  visual= Plot_confusion_matrix(dfdf)
+ #  absolute_path = "C:/Users/ideod/OneDrive/Documents/new folder zip data/diamonds.csv"
+  # dfdf = analyzer.read_dataset(csv_file_path=absolute_path)
+   #visual= Plot_confusion_matrix(dfdf)
+   #selected_features = dfdf[['carat', 'depth', 'table', 'price' ]]
+   #visual.plot_correlationMatrix(selected_features)
+   
+
   # visual.plot_correlationMatrix(['carat', 'depth', 'table', 'price' ])
- #  visual.plot_correlationMatrix(Classifier.predict())
+    

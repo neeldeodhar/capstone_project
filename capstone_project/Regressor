@@ -44,14 +44,15 @@ def main():
     DTR = MyDecisionTree(random_state= 0, criterion = None, max_depth= 0, params = {})
     DTR.fit(X_train, Y_train , None)
     score_DTR["Decision Tree"] = DTR.score(X_test, Y_test)
+    print(score_DTR)
 
-   # score_RFR = {}
+    score_RFR = {}
    # DTC = MyDecisionTree(random_state= 0, params={})
-   # RFR = MyRandom_Regressor(random_state= None, n_estimators= None, params = {})
-    #RFR.fit(X_train, Y_train , None)
-   # score_RFR["Random Forest "] = RFR.score(X_test, Y_test)
-    
-    #print(score_RFR)
+    RFR = MyRandom_Regressor(random_state= None, n_estimators= None, params = {})
+    RFR.fit(X_train, Y_train , None)
+    score_RFR["Random Forest "] = RFR.score(X_test, Y_test)
+    print(score_RFR)
+
     score_MLP = {}
     ML_P = MyMLP_Regressor(hidden_layer_sizes= 0, max_iter = 0,random_state= 0, params={})
     ML_P.fit(X_train, Y_train, None)
@@ -60,6 +61,15 @@ def main():
    # score_RFR["Random Forest "] = RFR.score(X_test, Y_test)
     score_MLP["MLP Regres"] = ML_P.score(X_test, Y_test)
     print(score_MLP)
+
+    score_SVC = {}
+    SV_C = MySVC_Regressor(random_state= 0, params={})
+    SV_C.fit(X_train, Y_train, None)
+   # RFR = MyRandom_Regressor(random_state= None, n_estimators= None, params = {})
+    #RFR.fit(X_train, Y_train , None)
+   # score_RFR["Random Forest "] = RFR.score(X_test, Y_test)
+    score_SVC["SVR"] = SV_C.score(X_test, Y_test)
+    print(score_SVC)
 
 class Regressor: 
     def __init__(self, random_state: int, params: dict):
@@ -90,8 +100,10 @@ class Regressor:
        
         MSE = mean_squared_error(y_true,y_predicted)
         MAE = mean_absolute_error(y_true,y_predicted)
-        print ("MSE"+ str(MSE) )
+        print ("MSE" + str(MSE))
+        print("MAE" + str(MAE))
         return MSE
+        return MAE
 
 class MyDecisionTree(Regressor):
     def __init__(self, criterion:str, random_state:int, max_depth: int, params: dict):
@@ -121,14 +133,14 @@ class MyRandom_Regressor(Regressor):
         Rmodel = RandomForestRegressor()
         return Rmodel
 class MySVC_Regressor(Regressor):        
-    def __init__(self, kernel:str, gamma: str, random_state:int, max_depth: int, params: dict):
+    def __init__(self, random_state:int, params: dict):
         #self.criterion = criterion
         
-        self.gamma = gamma
-        self.kernel = kernel 
+      #  self.gamma = gamma
+       # self.kernel = kernel 
         super().__init__(random_state = random_state, params = params)
     def create_model(self)-> SVR:
-        model = SVC()
+        model = SVR()
        # DCT.fit(X_train, y_train)
         return model
 
