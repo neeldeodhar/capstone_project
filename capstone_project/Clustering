@@ -16,11 +16,60 @@ from sklearn.preprocessing import OrdinalEncoder
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.cluster import KMeans
 from sklearn.cluster import AgglomerativeClustering
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import LabelEncoder
+import matplotlib.pyplot as plt
+from capstone_project import analyzer
+from sklearn.model_selection import train_test_split 
+from sklearn.cluster import MeanShift
+
+
 
 def main():
+    absolute_path = "C:/Users/ideod/OneDrive/Documents/new folder zip data/diamonds.csv"
+    dfdf = analyzer.read_dataset(csv_file_path=absolute_path)
+    data_manipulation = analyzer.DataManipulation(dfdf)
+
+    y = dfdf['cut']    
+    selected_features = dfdf[['carat', 'depth', 'table', 'price' ]]
+    
+    encoder = LabelEncoder()
+    Y = encoder.fit_transform(y)
+    
+    
+    scaler = StandardScaler()
+    X = scaler.fit_transform(selected_features)
+    X_train, X_test_val, Y_train, Y_test_val = train_test_split(X, Y, test_size=0.2, random_state=45)
+    X_test, X_val, Y_test, Y_val = train_test_split(X_test_val, Y_test_val, test_size=0.5, random_state=45)
+  
+    
+    X_trainscale = scaler.fit_transform(X_train)
+    X_testscale = scaler.transform(X_test)
+    
+    score_kM = {}
+    KM = MyK_Means(params = {} , random_state= None)
+    KM.fit(X_train, Y_train , None)
+    score_kM ["k MEANS"] = KM.predict(X_test)
+    
+    print(score_kM)
+
+    score_MS = {}
+    MS = My_MeanShift(params = {} , random_state= None, n_clusters= 2)
+    MS.fit(X_train, Y_train , None)
+    score_MS ["Mean shift Clustering"] = MS.predict(X_test)
+    
+    print(score_MS)
+    
     
 
 class Clusterer():
+    def __init__(self, random_state: int, params: dict):
+      
+       self.random_state = random_state
+      # self.model = self.create_model()
+       self.params = params
+       self.model = self.create_model()
+
     def fit(self, X_train: np.ndarray, y_true_train: np.ndarray, params: dict):
        # self.model = RandomForestClassifier(n_estimators= self.n_estimators, max_depth = self.max_depth, random_state = 42)
         #self.model.fit(self.X_train, self.y_train)
@@ -28,3 +77,26 @@ class Clusterer():
     def predict(self, X: np.ndarray) -> np.ndarray:
         predict_results = self.model.predict(X)
         return predict_results
+
+class MyK_Means(Clusterer):
+    def __init__(self, params: dict, random_state: int):
+        super().__init__(random_state = random_state, params = params)
+    def create_model(self)-> KMeans:
+        model = KMeans()
+        return model
+
+class MyAgglomerative(Clusterer):
+    def __init__(self, random_state: int, n_clusters: int, params: dict):
+        super().__init__(random_state = random_state, params = params)
+    def create_model(self)-> AgglomerativeClustering:
+        model = AgglomerativeClustering()
+        return model
+class My_MeanShift(Clusterer):
+    def __init__(self, random_state: int, n_clusters: int, params: dict):
+        super().__init__(random_state = random_state, params = params)
+    def create_model(self)-> KMeans:
+        model = KMeans()
+        return model
+
+if __name__ =="__main__":
+   main()
