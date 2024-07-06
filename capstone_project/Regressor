@@ -1,18 +1,19 @@
 import pandas as pd
 import numpy as np
+import math
 from numpy import ndarray
 from sklearn.model_selection import train_test_split 
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import mean_absolute_error
+
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OneHotEncoder
-#from sklearn.utils import shuffle
+
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import MinMaxScaler
-#from capstone_project import Classifier
+
 from capstone_project import analyzer
-from sklearn.metrics import accuracy_score
+
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import mean_absolute_error
@@ -40,14 +41,14 @@ def main():
     
     
     score_DTR = {}
-  # DTC = MyDecisionTree(random_state= 0, params={})
+  
     DTR = MyDecisionTree(random_state= 0, criterion = None, max_depth= 0, params = {})
     DTR.fit(X_train, Y_train , None)
     score_DTR["Decision Tree"] = DTR.score(X_test, Y_test)
     print(score_DTR)
 
     score_RFR = {}
-   # DTC = MyDecisionTree(random_state= 0, params={})
+   
     RFR = MyRandom_Regressor(random_state= None, n_estimators= None, params = {})
     RFR.fit(X_train, Y_train , None)
     score_RFR["Random Forest "] = RFR.score(X_test, Y_test)
@@ -56,30 +57,20 @@ def main():
     score_MLP = {}
     ML_P = MyMLP_Regressor(hidden_layer_sizes= 0, max_iter = 0,random_state= 0, params={})
     ML_P.fit(X_train, Y_train, None)
-   # RFR = MyRandom_Regressor(random_state= None, n_estimators= None, params = {})
-    #RFR.fit(X_train, Y_train , None)
-   # score_RFR["Random Forest "] = RFR.score(X_test, Y_test)
+   
     score_MLP["MLP Regres"] = ML_P.score(X_test, Y_test)
     print(score_MLP)
 
     score_SVC = {}
     SV_C = MySVC_Regressor(random_state= 0, params={})
     SV_C.fit(X_train, Y_train, None)
-   # RFR = MyRandom_Regressor(random_state= None, n_estimators= None, params = {})
-    #RFR.fit(X_train, Y_train , None)
-   # score_RFR["Random Forest "] = RFR.score(X_test, Y_test)
+  
     score_SVC["SVR"] = SV_C.score(X_test, Y_test)
     print(score_SVC)
 
 class Regressor: 
     def __init__(self, random_state: int, params: dict):
-        #self.X_test = X_test
-       # self.X_train = X_train
-        
-        #self.y_test = y_test
-       # self.y_train = y_train
-       # self.n_estimators = 10
-       # self.max_depth = 10
+       
        self.random_state = random_state
        self.model = self.create_model()
        self.params = params
@@ -87,8 +78,7 @@ class Regressor:
         return None
 
     def fit(self, X_train: np.ndarray, y_true_train: np.ndarray, params: dict):
-       # self.model = RandomForestClassifier(n_estimators= self.n_estimators, max_depth = self.max_depth, random_state = 42)
-        #self.model.fit(self.X_train, self.y_train)
+       
         self.model.fit(X_train, y_true_train)
     def predict(self, X: np.ndarray) -> np.ndarray:
         predict_results = self.model.predict(X)
@@ -100,60 +90,50 @@ class Regressor:
        
         MSE = mean_squared_error(y_true,y_predicted)
         MAE = mean_absolute_error(y_true,y_predicted)
+        RMSE = math.sqrt(MSE)
         print ("MSE" + str(MSE))
         print("MAE" + str(MAE))
+        print ("RMSE" + str(RMSE))
         return MSE
         return MAE
+        return RMSE
 
 class MyDecisionTree(Regressor):
     def __init__(self, criterion:str, random_state:int, max_depth: int, params: dict):
-       # self.criterion = criterion
-        #self.random_state = random_state
-        #self.max_depth = max_depth
-      #  super().__init__(random_state = random_state, max_depth = max_depth, criterion = criterion, params = params)
-      #  super().__init__(random_state = random_state, params = params)
+       
        super().__init__(random_state = random_state, params = params)
     def create_model(self)-> DecisionTreeRegressor:
         model = DecisionTreeRegressor()
-       # DCT.fit(X_train, y_train)
+       
         return model 
 
 class MyRandom_Regressor(Regressor):
     def __init__(self, n_estimators: int, random_state: int, params: dict):
-        #super().__init__(n_estimators = n_estimators, criterion = criterion, max_depth = max_depth, params = params)
+       
         super().__init__(random_state= random_state , params = params)
-       # self.test_size = test_size
-      #  self.criterion = criterion
+       
         self.n_estimators = n_estimators
-       # self.max_depth = max_depth
+      
         self.random_state = random_state
-   # def split_data(self):
-      #  self.X_train = self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size = self.custom_param, random_state =42)
+   
     def create_model(self)-> RandomForestRegressor:
         Rmodel = RandomForestRegressor()
         return Rmodel
 class MySVC_Regressor(Regressor):        
     def __init__(self, random_state:int, params: dict):
-        #self.criterion = criterion
         
-      #  self.gamma = gamma
-       # self.kernel = kernel 
         super().__init__(random_state = random_state, params = params)
     def create_model(self)-> SVR:
         model = SVR()
-       # DCT.fit(X_train, y_train)
         return model
 
 class MyMLP_Regressor(Regressor):
     def __init__(self, hidden_layer_sizes:int, random_state:int, max_iter: int, params: dict):
-        #self.criterion = criterion
-        
-        #self.gamma = gamma
-      #  self.kernel = kernel 
+         
         super().__init__(random_state = random_state, params = params)
     def create_model(self)-> MLPRegressor:
         modelMLP = MLPRegressor()
-       # DCT.fit(X_train, y_train)
+       
         return modelMLP
 
 

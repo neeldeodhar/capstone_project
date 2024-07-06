@@ -22,8 +22,7 @@ def describe(dataset: pd.DataFrame) ->str:
 
 class DataManipulation():
     def __init__(self, df:pd.DataFrame):
-   # id = Column(String)
-       # self.df = pd.DataFrame
+   
        self.df = df
 
     def drop_column(self, column_name: str):
@@ -106,11 +105,9 @@ class visualization():
               
         
         selected_features = self.df[column_names]
-       # data = np.random.normal(170, 10, 250)
+       
         data_dfdf['carat'] = pd.cut(data_dfdf['carat'], bins= [50 ,100, 150, 200, 250], labels = ['low', 'medium','high','very high'])
-       # self.df= data_dfdf
-        #return self.df
-        # Plot the histogram
+       
         data_dfdf['color'] = pd.cut(data_dfdf['color'], bins= [1 ,2, 3, 4, 5], labels = ['low', 'medium','high','very high'])
         data_dfdf['clarity'] = pd.cut(data_dfdf['clarity'], bins= [1 ,2, 3, 4, 5], labels = ['low', 'medium','high','very high'])
         data_dfdf['depth'] = pd.cut(data_dfdf['depth'], bins= [50 ,55, 60, 65, 70], labels = ['low', 'medium','high','very high'])
@@ -126,9 +123,7 @@ class visualization():
 
     def plot_histograms_categorical(self,column_names):
         selected_features = self.df[column_names]
-       # data = np.random.normal(170, 10, 250)()
-
-        # Plot the histogram
+       
         plt.hist(selected_features)
         plt.xlabel([column_names])
         plt.ylabel("count")

@@ -47,11 +47,14 @@ def main():
     X_testscale = scaler.transform(X_test)
     
     score_kM = {}
-    KM = MyK_Means(params = {} , random_state= None)
+    KM = MyK_Means(params = {} , random_state= None, n_clusters= 2)
+   
     KM.fit(X_train, Y_train , None)
-    score_kM ["k MEANS"] = KM.predict(X_test)
+    score_kM ["k Means"] = KM.predict(X_test)
     
     print(score_kM)
+    
+ 
 
     score_MS = {}
     MS = My_MeanShift(params = {} , random_state= None, n_clusters= 2)
@@ -66,23 +69,33 @@ class Clusterer():
     def __init__(self, random_state: int, params: dict):
       
        self.random_state = random_state
-      # self.model = self.create_model()
+      
        self.params = params
        self.model = self.create_model()
 
     def fit(self, X_train: np.ndarray, y_true_train: np.ndarray, params: dict):
-       # self.model = RandomForestClassifier(n_estimators= self.n_estimators, max_depth = self.max_depth, random_state = 42)
-        #self.model.fit(self.X_train, self.y_train)
+       
         self.model.fit(X_train, y_true_train)
     def predict(self, X: np.ndarray) -> np.ndarray:
         predict_results = self.model.predict(X)
         return predict_results
 
 class MyK_Means(Clusterer):
-    def __init__(self, params: dict, random_state: int):
+    def __init__(self, params: dict, random_state: int, n_clusters: int):
         super().__init__(random_state = random_state, params = params)
     def create_model(self)-> KMeans:
-        model = KMeans()
+        score = []
+        for i in range(10, 20):
+            model = KMeans(n_clusters=i, random_state=0)
+            score.append(i)
+            print(score)
+            
+          
+        plt.plot(range(10, 20), score, marker='.', markersize=10)
+        plt.title('The Elbow Method')
+        plt.xlabel('Number of clusters')
+        plt.ylabel('SSE') # Model Inertia
+        plt.show()
         return model
 
 class MyAgglomerative(Clusterer):

@@ -16,7 +16,7 @@ from sklearn.preprocessing import OrdinalEncoder
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-#from tensorflow.keras.models import Sequential 
+ 
 
 def main():
     absolute_path = "C:/Users/ideod/OneDrive/Documents/new folder zip data/diamonds.csv"
@@ -46,14 +46,9 @@ def main():
     
     print(score_dict)
     
- # def __init__(self, n_estimators: int, criterion: str, max_depth: int):
- #   RandClass = MyRandom_Classifier(params={}, n_estimators= None, criterion ='gini', max_depth= None, random_state = None)
- #   RandClass.fit(X_train, Y_train , None)
- #   score_RC ["Random Classifier"] = RandClass.score(X_test, Y_test)
-    
-  #  print(score_RC)
+ 
     score_DTC = {}
-   # DTC = MyDecisionTree(random_state= 0, params={})
+  
     DTC = MyDecisionTree(random_state= 0, criterion= 'gini', max_depth = None, params = {})
     DTC.fit(X_train, Y_train , None)
     score_DTC["Decision Tree"] = DTC.score(X_test, Y_test)
@@ -61,26 +56,24 @@ def main():
     print(score_DTC)
 
     score_SVC = {}
-   # DTC = MyDecisionTree(random_state= 0, params={})
+
     SV = MySVC_classifier(kernel = None, gamma = None, random_state= 0, max_depth = None, params = {})
     SV.fit(X_train, Y_train , None)
     score_SVC["SVC"] = SV.score(X_test, Y_test)
     
     print(score_SVC)
-  #  scoreSVC = svm.score(X_test,y_test)
+ 
     Y_pred = SV.predict(X_test)
     con = confusion_matrix(Y_test, Y_pred)
     print ("confusion matrix:\n",con)
-  #  cmval = confusion_matrix(Y_val, Y_pred)
+ 
     cmval_display = ConfusionMatrixDisplay(con).plot()
-   # ConfusionMatrixDisplay(con).plot()
-  #  plt.figure(figsize =(7,7))
-  #  sns.heatmap(Y_pred.corr(), annot = True)
+   
        
     plt.show()
 
     score_RF = {}
-   # DTC = MyDecisionTree(random_state= 0, params={})
+   
     RF = MyRandom_Classifier(random_state= None, n_estimators= None, criterion = None, max_depth = None, params = {})
     RF.fit(X_train, Y_train , None)
     score_RF["Random Forest "] = RF.score(X_test, Y_test)
@@ -88,7 +81,7 @@ def main():
     print(score_RF)
 
     score_ANN = {}
-   # DTC = MyDecisionTree(random_state= 0, params={})
+  
     AN = MyANN_classifier(random_state= None, max_iter = None, hidden_layer_sizes = None, params = {})
     AN.fit(X_train, Y_train , None)
     score_ANN["ANN Classifier "] = AN.score(X_test, Y_test)
@@ -125,22 +118,14 @@ class Plot_confusion_matrix():
     
     def plot_correlationMatrix(self, column_names):
        selected_features = self.df[column_names]
-      #  selected_features = self.df(y_predicted)
-      #  cmval = confusion_matrix(y_true, y_pred)
-       # cmval_display = ConfusionMatrixDisplay(cmval).plot()
+      
        plt.figure(figsize =(7,7))
        sns.heatmap(selected_features.corr(), annot = True)
        
        plt.show()
 class Classifier: 
     def __init__(self, random_state: int, params: dict):
-        #self.X_test = X_test
-       # self.X_train = X_train
         
-        #self.y_test = y_test
-       # self.y_train = y_train
-       # self.n_estimators = 10
-       # self.max_depth = 10
        self.random_state = random_state
        self.model = self.create_model()
        self.params = params
@@ -148,8 +133,7 @@ class Classifier:
         return None
 
     def fit(self, X_train: np.ndarray, y_true_train: np.ndarray, params: dict):
-       # self.model = RandomForestClassifier(n_estimators= self.n_estimators, max_depth = self.max_depth, random_state = 42)
-        #self.model.fit(self.X_train, self.y_train)
+       
         self.model.fit(X_train, y_true_train)
     def predict(self, X: np.ndarray) -> np.ndarray:
         predict_results = self.model.predict(X)
@@ -173,40 +157,35 @@ class MyLogisticRegression(Classifier):
 
 class MyRandom_Classifier(Classifier):
     def __init__(self, n_estimators: int, random_state: int,criterion: str, max_depth: int, params: dict):
-        #super().__init__(n_estimators = n_estimators, criterion = criterion, max_depth = max_depth, params = params)
+       
         super().__init__(random_state= random_state , params = params)
-       # self.test_size = test_size
+       
         self.criterion = criterion
         self.n_estimators = n_estimators
         self.max_depth = max_depth
         self.random_state = random_state
-   # def split_data(self):
-      #  self.X_train = self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size = self.custom_param, random_state =42)
+   
     def create_model(self)-> RandomForestClassifier:
         model = RandomForestClassifier()
         return model
 class MyDecisionTree(Classifier):
     def __init__(self, criterion:str, random_state:int, max_depth: int, params: dict):
-       # self.criterion = criterion
-        #self.random_state = random_state
-        #self.max_depth = max_depth
-      #  super().__init__(random_state = random_state, max_depth = max_depth, criterion = criterion, params = params)
-      #  super().__init__(random_state = random_state, params = params)
+       
        super().__init__(random_state = random_state, params = params)
     def create_model(self)-> DecisionTreeClassifier:
         model = DecisionTreeClassifier()
-       # DCT.fit(X_train, y_train)
+       
         return model   
 class MySVC_classifier(Classifier):        
     def __init__(self, kernel:str, gamma: str, random_state:int, max_depth: int, params: dict):
-        #self.criterion = criterion
+        
         
         self.gamma = gamma
         self.kernel = kernel 
         super().__init__(random_state = random_state, params = params)
     def create_model(self)-> SVC:
         model = SVC()
-       # DCT.fit(X_train, y_train)
+       
         return model
 
 class MyANN_classifier(Classifier):
@@ -219,42 +198,9 @@ class MyANN_classifier(Classifier):
         return model
     
     
-   # def __init__(self, activation: str):
-       # self.activation = activation
-
-   # def ANN():
-       # sq = Sequential()
-
-       # sq.add(Dense(12, input_dim=8, activation='relu'))
-
-       # sq.add(Dense(8, activation='relu'))
-
-      #  sq.add(Dense(1, activation='sigmoid'))
-
-       # sq.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-#class MLP_Classifier(Classifier):
-  #  def __init__(self, )
+  
 
 if __name__ =="__main__":
    main()
    
-  #  RFM = Random_Classifier(0.2)
-   # RFM.split_data()
-    #RFM.fit(RFM.X_train, RFM.y_train)
-   # absolute_path = "C:/Users/ideod/OneDrive/Documents/new folder zip data/diamonds.csv"
-    #dfdf = read_dataset(csv_file_path=absolute_path)
-   # params = {"criterion": "lbgs"}
-    #random_state = 4
-    #logreg = LogisticRegression (params = params, random_state = random_state)
-    #logreg.score
-  # absolute_path = "C:/Users/ideod/OneDrive/Documents/new folder zip data/diamonds.csv"
-   #dfdf = analyzer.read_dataset(csv_file_path=absolute_path)
- #  absolute_path = "C:/Users/ideod/OneDrive/Documents/new folder zip data/diamonds.csv"
-  # dfdf = analyzer.read_dataset(csv_file_path=absolute_path)
-   #visual= Plot_confusion_matrix(dfdf)
-   #selected_features = dfdf[['carat', 'depth', 'table', 'price' ]]
-   #visual.plot_correlationMatrix(selected_features)
-   
-
-  # visual.plot_correlationMatrix(['carat', 'depth', 'table', 'price' ])
-    
+  
