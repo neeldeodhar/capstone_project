@@ -3,7 +3,7 @@ import numpy as np
 import math
 from numpy import ndarray
 from sklearn.model_selection import train_test_split 
-from sklearn.preprocessing import StandardScaler
+
 
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.preprocessing import LabelEncoder
@@ -19,54 +19,77 @@ from sklearn.metrics import mean_squared_error
 from sklearn.metrics import mean_absolute_error
 from sklearn.svm import SVR
 from sklearn.neural_network import MLPRegressor
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.metrics import r2_score
+    
+  
 
 def main():
     absolute_path = "C:/Users/ideod/OneDrive/Documents/new folder zip data/diamonds.csv"
     dfdf = analyzer.read_dataset(csv_file_path=absolute_path)
 
     data_manipulation = analyzer.DataManipulation(dfdf)
-    y = dfdf['cut']    
-    selected_features = dfdf[['carat', 'depth', 'table', 'price' ]]
+    Y = dfdf['price'].values    
+    selected_features = dfdf[['carat', 'depth', 'table']]
     
     encoder = LabelEncoder()
-    Y = encoder.fit_transform(y)
+   
     
     
     scaler = StandardScaler()
     X = scaler.fit_transform(selected_features)
+  
     X_train, X_test_val, Y_train, Y_test_val = train_test_split(X, Y, test_size=0.2, random_state=45)
     X_test, X_val, Y_test, Y_val = train_test_split(X_test_val, Y_test_val, test_size=0.5, random_state=45)
-    Y = encoder.fit_transform(y)
-    
-    
-    
-    score_DTR = {}
-  
-    DTR = MyDecisionTree(random_state= 0, criterion = None, max_depth= 0, params = {})
-    DTR.fit(X_train, Y_train , None)
-    score_DTR["Decision Tree"] = DTR.score(X_test, Y_test)
-    print(score_DTR)
-
-    score_RFR = {}
    
-    RFR = MyRandom_Regressor(random_state= None, n_estimators= None, params = {})
-    RFR.fit(X_train, Y_train , None)
-    score_RFR["Random Forest "] = RFR.score(X_test, Y_test)
-    print(score_RFR)
+ 
+      
+ 
+    score_DTR = []
+   
+    for i in ['friedman_mse', 'squared_error', 'poisson']:
+        
+        DTR1 = MyDecisionTree(random_state =0, criterion = i, max_depth= 0, params = {})
+        DTR1.fit(X_train,Y_train, None)
+        score_DTR.append(DTR1.score(X_test, Y_test))
+        print("Decision Tree", score_DTR)         
+  
+    score_RFR = []
 
-    score_MLP = {}
+    for k in range (290,300):
+        optRFR = RandomForestRegressor(n_estimators = k, random_state = None)
+        optRFR = optRFR.fit(X_train, Y_train, None)
+      
+        score_RFR.append(optRFR.score(X_test, Y_test))
+  
+ 
+    print("Random Forest Regressor", score_RFR)
+
+    score_MLP = []
     ML_P = MyMLP_Regressor(hidden_layer_sizes= 0, max_iter = 0,random_state= 0, params={})
     ML_P.fit(X_train, Y_train, None)
-   
-    score_MLP["MLP Regres"] = ML_P.score(X_test, Y_test)
-    print(score_MLP)
+    y_predMLP = ML_P.predict(X_test)
+ 
+    score_MLP.append(ML_P.score(X_test, Y_test))
+    
+    
+    print("MLP regressor",score_MLP)
 
-    score_SVC = {}
+    score_SVC = []
     SV_C = MySVC_Regressor(random_state= 0, params={})
     SV_C.fit(X_train, Y_train, None)
-  
-    score_SVC["SVR"] = SV_C.score(X_test, Y_test)
-    print(score_SVC)
+    outputSV = SV_C.predict(X_test)
+   
+    SV_C.append(SV_C.score(X_test,Y_test))
+    print("SVC score" , score_SVC)
+    
+    score_KNN = []
+    for i in range(1,20):
+        knn = MyKNN_Regressor(n_neighbors = i)
+        knn.fit(X_train, Y_train, None)
+     
+        score.append(knn.score(X_test, Y_test))
+    print("KNN score", score_KNN)
 
 class Regressor: 
     def __init__(self, random_state: int, params: dict):
@@ -91,21 +114,37 @@ class Regressor:
         MSE = mean_squared_error(y_true,y_predicted)
         MAE = mean_absolute_error(y_true,y_predicted)
         RMSE = math.sqrt(MSE)
+        R2square = r2_score(y_true, y_predicted)
         print ("MSE" + str(MSE))
         print("MAE" + str(MAE))
         print ("RMSE" + str(RMSE))
+        print("R2 square" + str(R2square))
         return MSE
         return MAE
         return RMSE
-
+        return R2square
+class MyKNN_Regressor(Regressor):
+    def __init__(self, n_estimators: int, random_state: int, params: dict):
+       
+        super().__init__(random_state= random_state , params = params)
+       
+        self.n_estimators = n_estimators
+      
+        self.random_state = random_state
+   
+    def create_model(self)-> KNeighborsRegressor:
+        kmodeL = KNeighborsRegressor()
+        return kmodel
 class MyDecisionTree(Regressor):
+    
     def __init__(self, criterion:str, random_state:int, max_depth: int, params: dict):
        
        super().__init__(random_state = random_state, params = params)
     def create_model(self)-> DecisionTreeRegressor:
-        model = DecisionTreeRegressor()
-       
-        return model 
+       model = DecisionTreeRegressor()
+       return model
+      
+      
 
 class MyRandom_Regressor(Regressor):
     def __init__(self, n_estimators: int, random_state: int, params: dict):
@@ -138,4 +177,5 @@ class MyMLP_Regressor(Regressor):
 
 
 if __name__ =="__main__":
+   
    main()       

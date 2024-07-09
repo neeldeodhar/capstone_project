@@ -25,7 +25,7 @@ from sklearn.cluster import MeanShift
 from sklearn.datasets import make_blobs
 
 
-
+#MAIN FUNCTION: includes reading dataset and preprocessing (encoding, train test split, scaling etc.)
 
 def main():
     absolute_path = "C:/Users/ideod/OneDrive/Documents/new folder zip data/diamonds.csv"
@@ -65,7 +65,7 @@ def main():
     
     print(score_MS)
     
-    
+# HIERARCHICAL CLUSTERING (AGGLOMERATIVE) MODEL HAS BEEN CREATED BELOW; HOWEVER NOT CALLED ABOVE DUE TO MEMORY ISSUES ON COMPUTER    
 
 class Clusterer():
     def __init__(self, random_state: int, params: dict):
@@ -92,7 +92,8 @@ class MyK_Means(Clusterer):
             model = KMeans(n_clusters=i, random_state=0).fit(X)
             score.append(model.inertia_)
             print(score)
-            
+     
+#PLOTTING TO FIND THE OPTIMAL VALUE USING ELBOW METHOD BELOW     
           
         plt.plot(range(1, 10), score, marker='.', markersize=10)
         plt.title('The Elbow Method')
@@ -100,13 +101,14 @@ class MyK_Means(Clusterer):
         plt.ylabel('SSE') # Model Inertia
         plt.show()
         return model
-
+#creating Agglomerative model
 class MyAgglomerative(Clusterer):
     def __init__(self, random_state: int, n_clusters: int, params: dict):
         super().__init__(random_state = random_state, params = params)
     def create_model(self)-> AgglomerativeClustering:
         model = AgglomerativeClustering()
         return model
+#creating Meanshift model
 class My_MeanShift(Clusterer):
     def __init__(self, random_state: int, n_clusters: int, params: dict):
         super().__init__(random_state = random_state, params = params)

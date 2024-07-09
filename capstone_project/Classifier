@@ -10,6 +10,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
 from capstone_project import analyzer
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OrdinalEncoder
@@ -79,39 +80,27 @@ def main():
     score_RF["Random Forest "] = RF.score(X_test, Y_test)
     
     print(score_RF)
+    score_KN = {}
+    KN = MyKNN_Classifier(random_state= None, params = {})
+    KN.fit(X_train, Y_train , None)
+    score_KN["KNN Classifier "] = KN.score(X_test, Y_test)
+    
+    print(score_KN)
 
     score_ANN = {}
   
-    AN = MyANN_classifier(random_state= None, max_iter = None, hidden_layer_sizes = None, params = {})
+    AN = MyANN_classifier(random_state= None, max_iter = 40, hidden_layer_sizes = None, params = {})
     AN.fit(X_train, Y_train , None)
     score_ANN["ANN Classifier "] = AN.score(X_test, Y_test)
     
     print(score_ANN)
-def  pre_processing():
-    absolute_path = "C:/Users/ideod/OneDrive/Documents/new folder zip data/diamonds.csv"
-    dfdf = analyzer.read_dataset(csv_file_path=absolute_path)
 
-    data_manipulation = analyzer.DataManipulation(dfdf)
-    y = dfdf['cut']    
-    selected_features = dfdf[['carat', 'depth', 'table', 'price' ]]
-    
-    encoder = LabelEncoder()
-    Y = encoder.fit_transform(y)
-    
-    score_dict = {}
-    scaler = StandardScaler()
-    X = scaler.fit_transform(selected_features)
-    X_train, X_test_val, Y_train, Y_test_val = train_test_split(X, Y, test_size=0.2, random_state=45)
-    X_test, X_val, Y_test, Y_val = train_test_split(X_test_val, Y_test_val, test_size=0.5, random_state=45)
-  
-    
-    X_trainscale = scaler.fit_transform(X_train)
-    X_testscale = scaler.transform(X_test)
 
 def score(y_true: np.ndarray, y_predicted: np.ndarray) -> float:
     score = accuracy_score(y_true, y_predicted)
     return score
 
+#PLOTTING CONFUSION MATRIX
 class Plot_confusion_matrix():
     def __init__(self, df:pd.DataFrame):
         self.df = df
@@ -154,6 +143,13 @@ class MyLogisticRegression(Classifier):
     def create_model(self)-> LogisticRegression:
         model = LogisticRegression()
         return model
+
+class MyKNN_Classifier(Classifier):
+    def __init__(self, random_state: int, params: dict):
+        super().__init__(random_state = random_state, params = params)
+    def create_model(self)-> KNeighborsClassifier:
+        modelKN = KNeighborsClassifier()
+        return modelKN   
 
 class MyRandom_Classifier(Classifier):
     def __init__(self, n_estimators: int, random_state: int,criterion: str, max_depth: int, params: dict):
