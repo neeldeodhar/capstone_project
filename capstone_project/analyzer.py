@@ -1,3 +1,4 @@
+#IMPORTING LIBRARIES
 import os
 import sys
 import pandas as pd
@@ -11,6 +12,7 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.utils import shuffle
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import MinMaxScaler
+
 def read_dataset(csv_file_path: str) -> pd.DataFrame:
     dataset = pd.read_csv(filepath_or_buffer = csv_file_path)
     
@@ -19,7 +21,7 @@ def read_dataset(csv_file_path: str) -> pd.DataFrame:
 def describe(dataset: pd.DataFrame) ->str:
     print(dataset.describe())
     return dataset.describe()
-
+#CREATION of Data manipulation class (pre-processing)
 class DataManipulation():
     def __init__(self, df:pd.DataFrame):
    
@@ -78,7 +80,7 @@ class DataManipulation():
         df = df.sample(frac=factor, replace= True, random_state=1)
         self.df= data_dfdf
         return self.df
-  
+ #creating a visualization class 
 class visualization():
     def __init__(self, df:pd.DataFrame):
         self.df = df
@@ -95,11 +97,13 @@ class visualization():
         sns.heatmap(selected_features.corr(), annot = True)
        
         plt.show()
+#CODE for boxplots
     def plot_boxPlot(self, column_names):
         selected_features = self.df[column_names]
         plt.figure(figsize = (12,5))
         sns.boxplot(data = selected_features)
         plt.show()
+#CODE for numeric histogram
     def plot_histograms_numeric(self,column_names):
         data_dfdf = self.df.copy()
               
@@ -120,7 +124,7 @@ class visualization():
         plt.ylabel("count")
         plt.title("Numeric Histogram")
         plt.show()
-
+#code for categorical histograms
     def plot_histograms_categorical(self,column_names):
         selected_features = self.df[column_names]
        
@@ -134,6 +138,7 @@ if __name__ =="__main__":
     
     absolute_path = "C:/Users/ideod/OneDrive/Documents/new folder zip data/diamonds.csv"
     dfdf = read_dataset(csv_file_path=absolute_path)
+#CREATING original model for pre-processing
     original = DataManipulation(dfdf)
   
     dfdf = original.drop_column("Unnamed: 0")
@@ -144,7 +149,7 @@ if __name__ =="__main__":
     dfdf = original.encode_label("cut")
     dfdf = original.min_max_Scaler(['carat','color','clarity'])
     dfdf = original.z_Score(['carat','color','clarity'])
-
+# CREATING visual model for visualization
 
     visual = visualization(dfdf)
     print(describe)

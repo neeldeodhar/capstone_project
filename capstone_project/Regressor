@@ -1,3 +1,4 @@
+#importing libraries
 import pandas as pd
 import numpy as np
 import math
@@ -22,7 +23,7 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.metrics import r2_score
     
-  
+ #CREATING and defining MAIN function for pre-processing and calling regressor models 
 
 def main():
     absolute_path = "C:/Users/ideod/OneDrive/Documents/new folder zip data/diamonds.csv"
@@ -88,7 +89,7 @@ def main():
      
         score.append(knn.score(X_test, Y_test))
         print("KNN score", score_KNN)
-
+#creation of regressor class
 class Regressor: 
     def __init__(self, random_state: int, params: dict):
        
@@ -121,6 +122,7 @@ class Regressor:
         return MAE
         return RMSE
         return R2square
+#creating KNN regressor
 class MyKNN_Regressor(Regressor):
     def __init__(self, n_estimators: int, random_state: int, params: dict):
        
@@ -133,6 +135,7 @@ class MyKNN_Regressor(Regressor):
     def create_model(self)-> KNeighborsRegressor:
         kmodeL = KNeighborsRegressor()
         return kmodel
+#creating Decision Tree regressor
 class MyDecisionTree(Regressor):
     
     def __init__(self, criterion:str, random_state:int, max_depth: int, params: dict):
@@ -142,7 +145,7 @@ class MyDecisionTree(Regressor):
        model = DecisionTreeRegressor()
        return model
       
-      
+ #creating Random Regressor     
 
 class MyRandom_Regressor(Regressor):
     def __init__(self, n_estimators: int, random_state: int, params: dict):
@@ -156,6 +159,7 @@ class MyRandom_Regressor(Regressor):
     def create_model(self)-> RandomForestRegressor:
         Rmodel = RandomForestRegressor()
         return Rmodel
+#creating SVC Regressor
 class MySVC_Regressor(Regressor):        
     def __init__(self, random_state:int, params: dict):
         
@@ -163,7 +167,7 @@ class MySVC_Regressor(Regressor):
     def create_model(self)-> SVR:
         model = SVR()
         return model
-
+#creating MLP regressor model
 class MyMLP_Regressor(Regressor):
     def __init__(self, hidden_layer_sizes:int, random_state:int, max_iter: int, params: dict):
          

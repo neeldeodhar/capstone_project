@@ -1,3 +1,4 @@
+#IMPORTING libraries
 import pandas as pd
 import numpy as np
 from numpy import ndarray
@@ -18,7 +19,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
  
-
+#CREATING and defining MAIN function for pre-processing and calling classifier models
 def main():
     absolute_path = "C:/Users/ideod/OneDrive/Documents/new folder zip data/diamonds.csv"
     dfdf = analyzer.read_dataset(csv_file_path=absolute_path)
@@ -112,6 +113,7 @@ class Plot_confusion_matrix():
        sns.heatmap(selected_features.corr(), annot = True)
        
        plt.show()
+       #CREATING classifier class
 class Classifier: 
     def __init__(self, random_state: int, params: dict):
         
@@ -135,7 +137,7 @@ class Classifier:
         return score
 
               
-       
+#creating logistic regression classifierclass       
     
 class MyLogisticRegression(Classifier):
     def __init__(self, random_state: int, params: dict):
@@ -143,14 +145,14 @@ class MyLogisticRegression(Classifier):
     def create_model(self)-> LogisticRegression:
         model = LogisticRegression()
         return model
-
+# creating KNN classifier class
 class MyKNN_Classifier(Classifier):
     def __init__(self, random_state: int, params: dict):
         super().__init__(random_state = random_state, params = params)
     def create_model(self)-> KNeighborsClassifier:
         modelKN = KNeighborsClassifier()
         return modelKN   
-
+# creating Random Classifier class
 class MyRandom_Classifier(Classifier):
     def __init__(self, n_estimators: int, random_state: int,criterion: str, max_depth: int, params: dict):
        
@@ -164,6 +166,8 @@ class MyRandom_Classifier(Classifier):
     def create_model(self)-> RandomForestClassifier:
         model = RandomForestClassifier()
         return model
+#CREATING Decision Tree class
+
 class MyDecisionTree(Classifier):
     def __init__(self, criterion:str, random_state:int, max_depth: int, params: dict):
        
@@ -171,7 +175,8 @@ class MyDecisionTree(Classifier):
     def create_model(self)-> DecisionTreeClassifier:
         model = DecisionTreeClassifier()
        
-        return model   
+        return model 
+#creating SVC class  
 class MySVC_classifier(Classifier):        
     def __init__(self, kernel:str, gamma: str, random_state:int, max_depth: int, params: dict):
         
@@ -183,7 +188,7 @@ class MySVC_classifier(Classifier):
         model = SVC()
        
         return model
-
+#creating ANN classifier class
 class MyANN_classifier(Classifier):
     def __init__(self, max_iter: int, random_state: int, hidden_layer_sizes: int, params:dict):
         self.max_iter = max_iter
