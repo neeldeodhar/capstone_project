@@ -61,9 +61,7 @@ def main():
         optRFR = optRFR.fit(X_train, Y_train, None)
       
         score_RFR.append(optRFR.score(X_test, Y_test))
-  
- 
-    print("Random Forest Regressor", score_RFR)
+        print("Random Forest Regressor", score_RFR)
 
     score_MLP = []
     ML_P = MyMLP_Regressor(hidden_layer_sizes= 0, max_iter = 0,random_state= 0, params={})
@@ -80,7 +78,7 @@ def main():
     SV_C.fit(X_train, Y_train, None)
     outputSV = SV_C.predict(X_test)
    
-    SV_C.append(SV_C.score(X_test,Y_test))
+    score_SVC.append(SV_C.score(X_test,Y_test))
     print("SVC score" , score_SVC)
     
     score_KNN = []
@@ -89,7 +87,7 @@ def main():
         knn.fit(X_train, Y_train, None)
      
         score.append(knn.score(X_test, Y_test))
-    print("KNN score", score_KNN)
+        print("KNN score", score_KNN)
 
 class Regressor: 
     def __init__(self, random_state: int, params: dict):
