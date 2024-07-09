@@ -1,5 +1,5 @@
 # capstone_project
-This repository is the captsone project for the bootcamp; and it contains a diamond price prediction project.
+This repository is the capstone project for the bootcamp; and it contains a diamond price prediction project.
 Various dataset features i.e. cut, clarity, depth, table etc have been used for the above.
 
 The machine learning model (supervised) in the project can be used by any diamond merchants to predict the price of the diamonds based on the characteristics (dataset features) discussed above.
